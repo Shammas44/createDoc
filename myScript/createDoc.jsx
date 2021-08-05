@@ -31,3 +31,7 @@ setParagraphStyle(document);
 //remove masterspread for cover
 var cover = document.pages.item(0);
 cover.appliedMaster = null;
+// var myFile = new File(app.activeScript.parent.fsName + '/abc.jsx');
+// if (myFile.exists) {
+//     app.doScript(myFile, ScriptLanguage.JAVASCRIPT)
+// }

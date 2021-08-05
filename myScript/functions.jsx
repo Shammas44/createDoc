@@ -36,7 +36,7 @@ function setMargin(document, myMasterSpread) {
     myMarginPreferences.top = 70;
     myMarginPreferences.right = 70;
     myMarginPreferences.bottom = 100;
-    myMarginPreferences.columnCount = 3;
+    myMarginPreferences.columnCount = 2;
     myMarginPreferences.columnGutter = 14;
     //Page margins and columns for the right-hand pagjke
     var myMarginPreferences = myMasterSpread.myMasterSpread.pages.item(1).marginPreferences;
@@ -44,7 +44,7 @@ function setMargin(document, myMasterSpread) {
     myMarginPreferences.top = 70;
     myMarginPreferences.right = 70;
     myMarginPreferences.bottom = 100;
-    myMarginPreferences.columnCount = 3;
+    myMarginPreferences.columnCount = 2;
     myMarginPreferences.columnGutter = 14;
 }
 
@@ -79,41 +79,40 @@ function setFooter(document, myMasterSpread) {
     var myLeftTextFrame = myLeftPage.textFrames.add(sourceLayer);
     myLeftTextFrame.geometricBounds = [MARGIN_Y1, MARGIN_X1, 742, MARGIN_X2];
     myLeftTextFrame.textFramePreferences.firstBaselineOffset = FirstBaseline.LEADING_OFFSET;
-    myLeftTextFrame.textFramePreferences.textColumnCount = 3;
+    myLeftTextFrame.textFramePreferences.textColumnCount = 2;
     myLeftTextFrame.textFramePreferences.textColumnGutter = 14;
     //Add a label to make the frame easier to find later on.myLeftTextFrame.label = "BodyTextFrame"
     var myRightTextFrame = myRightPage.textFrames.add(sourceLayer);
     myRightTextFrame.geometricBounds = [MARGIN_Y1, MARGIN_X1, 742, MARGIN_X2];
     myRightTextFrame.textFramePreferences.firstBaselineOffset = FirstBaseline.LEADING_OFFSET;
-    myRightTextFrame.textFramePreferences.textColumnCount = 3;
+    myRightTextFrame.textFramePreferences.textColumnCount = 2;
     myRightTextFrame.textFramePreferences.textColumnGutter = 14;
     //Add a label to make the frame easier to find later on.myRightTextFrame.label = "BodyTextFrame"
     //Link the two frames using the nextTextFrame property.myLeftTextFrame.nextTextFrame = myRightTextFrame
 }
 
 function setContent(document) {
-    var str = '';
-    var index = 0;
-    for (index = 0; index < 500; index++) {
-        str += 'ABCDASFGALFGKAF ';
-    }
-
-    for (var i = 0; i <= 3; i++) {
+    var i = 0;
+    do {
         var textFrame = document.pages[i].textFrames.add(sourceLayer);
         textFrame.geometricBounds = [70, 70, 742, MARGIN_X2];
-        textFrame.textFramePreferences.textColumnCount = 3;
+        textFrame.textFramePreferences.textColumnCount = 2;
         textFrame.textFramePreferences.textColumnGutter = 14;
         if (i == 0) {
-            textFrame.insertionPoints.item(0).contents = "Headline!\r" + str;
+            textFrame.select();
+            var markdownScript = File('/Applications/MAMP/htdocs/indesignScript/myScript/markdownID.jsx');
+            app.doScript(markdownScript, ScriptLanguage.javascript);
+            // textFrame.insertionPoints.item(0).contents = "Headline!\r" + str;
+            i = 0;
         }
-    }
-    //link textFrame to each other
-    var allPages = document.pages;
-    var currentFrame = allPages[0].textFrames[0];
-    for (var i = 1; i < allPages.length; i++) {
-        currentFrame.nextTextFrame = allPages[i].textFrames[0];
-        currentFrame = allPages[i].textFrames[0];
-    }
+        if (i >= 1) {
+            //link textFrame to each other
+            var allPages = document.pages;
+            var currentFrame = allPages[i].textFrames[0];
+            currentFrame.previousTextFrame = allPages[i - 1].textFrames[0];
+        }
+        i++;
+    } while (textFrame.overflows);
 }
 
 function setParagraphStyle(document) {
